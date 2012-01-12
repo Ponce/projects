@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# OUTPUT is set to /tmp if not else specified
+OUTPUT=${OUTPUT:-/tmp}
+
+# the name of the tarball is desumed by the remote
+# repository name.
+# you can override also this specifying SRCNAM
+REMOTEGIT=$(git remote -v | grep fetch | cut -d\  -f1 | awk -F/ '{print $NF}')
+SRCNAM=${SRCNAM:-"$REMOTEGIT"}
+
+# form a string usable for versioning a tarball.
+# run it in a git tree and it will output a string
+# composed by the date, an underscore, and the first 
+# 7 digit of the commit id of the active branch.
+# by ponce <matteo.bernardini@gmail.com>
+COMMIT=$( git log -1 | head -1 | cut -c 8-14 )
+TODAY=$( git log -1 --date=short | grep ^Date | awk '{print $2}' | sed 's/-//g' )
+
+# the branch is extracted from git status
+BRANCH=$( git status | head -1 | cut -d\  -f4 )
+
+# some output
+echo "creating tarball from $SRCNAM sources, with version ${TODAY}_${COMMIT}"
+echo "${OUTPUT}/${SRCNAM}-${TODAY}_${COMMIT}.tar.xz"
+
+# create the tarball
+git archive --prefix=${SRCNAM}-${TODAY}_${COMMIT}/ $BRANCH | xz -c -z \
+  > ${OUTPUT}/${SRCNAM}-${TODAY}_${COMMIT}.tar.xz
+
+# calculate the md5
+( cd $OUTPUT
+md5sum  ${SRCNAM}-${TODAY}_${COMMIT}.tar.xz > ${SRCNAM}-${TODAY}_${COMMIT}.tar.xz.md5 )
