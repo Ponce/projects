@@ -8,13 +8,19 @@
 # published by Sam Hocevar. For more details, see
 # http://sam.zoy.org/wtfpl/COPYING
 
+# are we in a git tree?
+if [ "$( git log 2>&1 | head -1 | cut -d: -f1 )" = "fatal" ]; then
+  echo "this is not a git repository."
+  exit 1
+fi
+
 # OUTPUT is set to /tmp if not else specified
 OUTPUT=${OUTPUT:-/tmp}
 
 # the name of the tarball is desumed by the remote
 # repository name.
 # you can override also this specifying SRCNAM
-REMOTEGIT=$(git remote -v | grep fetch | cut -d\  -f1 | awk -F/ '{print $NF}')
+REMOTEGIT=$( git remote -v | grep fetch | cut -d\  -f1 | awk -F/ '{print $NF}' )
 SRCNAM=${SRCNAM:-"$REMOTEGIT"}
 
 # form a string usable for versioning a tarball.
