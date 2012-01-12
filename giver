@@ -5,7 +5,6 @@
 # composed by the date, an underscore, and the first 
 # 7 digit of the commit id of the active branch.
 # by ponce <matteo.bernardini@gmail.com>
-
 COMMIT=$( git log -1 | head -1 | cut -c 8-14 )
-TODAY=$( git log -1 --date=short | head -3 | tail -1 | awk '{print $2}' | sed 's/-//g' )
+TODAY=$( git log -1 --date=short | grep ^Date | awk '{print $2}' | sed 's/-//g' )
 echo ${TODAY}_${COMMIT}
