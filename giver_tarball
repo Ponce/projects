@@ -5,9 +5,8 @@
 # This program is free software. It comes without any warranty, to
 # the extent permitted by applicable law. You can redistribute it
 # and/or modify it under the terms of the WTFPL, Version 2, as
-# published by Sam Hocevar. See
+# published by Sam Hocevar. For more details, see
 # http://sam.zoy.org/wtfpl/COPYING
-# for more details.
 
 # OUTPUT is set to /tmp if not else specified
 OUTPUT=${OUTPUT:-/tmp}
