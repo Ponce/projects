@@ -8,7 +8,7 @@
 # published by Sam Hocevar. For more details, see
 # http://sam.zoy.org/wtfpl/COPYING
 
-# this shell script uses the following binaries:
+# This shell script uses the following binaries:
 # git, head, cut, awk, sed, xz, md5sum
 
 # are we in a git tree?
@@ -34,17 +34,18 @@ COMMIT=$( git log -1 | head -1 | cut -c 8-14 )
 TODAY=$( git log -1 --format=format:%ci | awk '{print $1}' | sed 's/-//g' )
 #TODAY=$( git log -1 --format=format:%ci | sed -e 's/-//g' -e 's/\ .*//' )
 
-# the branch is extracted from git status
+# the branch is extracted from git branch
 BRANCH=$( git branch | grep ^\* | cut -d\  -f2 )
 
 # some output
 echo "creating tarball from $SRCNAM sources, with version ${TODAY}_${COMMIT}"
 echo "${OUTPUT}/${SRCNAM}-${TODAY}_${COMMIT}.tar.xz"
 
-# create the tarball
+# create the tarball xz compressed
 git archive --prefix=${SRCNAM}-${TODAY}_${COMMIT}/ $BRANCH | xz -c -z \
   > ${OUTPUT}/${SRCNAM}-${TODAY}_${COMMIT}.tar.xz
 
 # calculate the md5
 ( cd $OUTPUT
-md5sum  ${SRCNAM}-${TODAY}_${COMMIT}.tar.xz > ${SRCNAM}-${TODAY}_${COMMIT}.tar.xz.md5 )
+  md5sum ${SRCNAM}-${TODAY}_${COMMIT}.tar.xz \
+  > ${SRCNAM}-${TODAY}_${COMMIT}.tar.xz.md5 )
